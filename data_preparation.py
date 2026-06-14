@@ -15,36 +15,16 @@ print(df.info())
 # !! Tratamento de variáveis !!
 df_processed = df.copy()
 
-# Preenchimento de Nulos com 'Unknown'
-df_processed['alcohol_freq'] = df_processed['alcohol_freq'].fillna('Unknown')
+# Label Encoding
+df_processed['sex'] = df_processed['sex'].map({'female': 0, 'male': 1})
+df_processed['smoker'] = df_processed['smoker'].map({'no': 0, 'yes': 1})
 
-# VARS. CATEGÓRICAS (One-Hot Encoding)
-colunas_categoricas = [
-    'sex', 'region', 'alcohol_freq', 'urban_rural', 'education',
-    'marital_status', 'employment_status', 'plan_type', 'network_tier',
-]  # Sex possui 3 valores (Male, female, other)
-df_processed = pd.get_dummies(df_processed, columns=colunas_categoricas, dtype=int)
-
-# VARS. ORDINAIS (Ordinal Encoding)
-df_processed['smoker'] = df_processed['smoker'].map(
-    {
-        'Never': 0,
-        'Former': 1,
-        'Current': 2,
-    }
-)
+# One Hot Encoding
+df_processed = pd.get_dummies(df_processed, columns=['region'], dtype=int)
 
 # !! Separação de Entrada e Alvo !!
-Y = df_processed['annual_medical_cost']
-
-# Lista de Colunas a serem removidas de X para evitar vazamento de dados...
-colunas_p_remover = [
-    'person_id',            # Irrelevante 
-    'annual_medical_cost',  # Target
-    'annual_premium','monthly_premium',  #Valores gerados com base no custo
-    'claims_count', 'avg_claim_amount', 'total_claims_paid'  # Histórico financeiro
-]
-X = df_processed.drop(columns=colunas_p_remover)  
+Y = df_processed['charges']
+X = df_processed.drop(columns='charges')  
 
 # !! Normalização !!
 scaler = StandardScaler()
