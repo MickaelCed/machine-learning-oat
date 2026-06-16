@@ -12,10 +12,12 @@ artefatos = joblib.load('modelo_charges.pkl')
 modelo = artefatos['modelo']
 
 kmeans = artefatos['kmeans']
+
 scaler = artefatos['scaler']
 
-colunas = artefatos['colunas']
-colunas_cluster = artefatos['colunas_cluster']
+colunas = list(artefatos['colunas'])
+
+colunas_cluster = list(artefatos['colunas_cluster'])
 
 
 
@@ -32,13 +34,9 @@ def cabecalho():
 
     print("""
 ╔════════════════════════════════════════════╗
-║                                            ║
 ║          🏥 MEDICAL COST PREDICTOR         ║
 ║                                            ║
-║     Previsão de custo de seguro médico     ║
-║                                            ║
-║   KMeans + Decision Tree Regressor         ║
-║                                            ║
+║     KMeans + Decision Tree Regressor       ║
 ╚════════════════════════════════════════════╝
 """)
 
@@ -54,26 +52,10 @@ def prever():
 
 
     age = int(input("Idade: "))
-
-    sex = int(
-        input(
-            "Sexo (0=feminino | 1=masculino): "
-        )
-    )
-
-    bmi = float(
-        input("BMI: ")
-    )
-
-    children = int(
-        input("Número de filhos: ")
-    )
-
-    smoker = int(
-        input(
-            "Fumante (0=não | 1=sim): "
-        )
-    )
+    sex = int(input("Sexo (0=feminino | 1=masculino): "))
+    bmi = float(input("BMI: "))
+    children = int(input("Número de filhos: "))
+    smoker = int(input("Fumante (0=não | 1=sim): "))
 
 
     print("""
@@ -83,13 +65,11 @@ Região:
 [2] Northwest
 [3] Southeast
 [4] Southwest
-
 """)
 
 
-    region = int(
-        input("Escolha: ")
-    )
+    region = int(input("Escolha: "))
+
 
 
     dados = {
@@ -107,65 +87,71 @@ Região:
     }
 
 
+
     regioes = {
-
-        1: 'region_northeast',
-        2: 'region_northwest',
-        3: 'region_southeast',
-        4: 'region_southwest'
-
+        1:'region_northeast',
+        2:'region_northwest',
+        3:'region_southeast',
+        4:'region_southwest'
     }
 
 
     if region in regioes:
-
         dados[regioes[region]] = 1
 
 
 
-    entrada = pd.DataFrame(
-        [dados]
-    )
+    entrada = pd.DataFrame([dados])
+
+
+    print("\nEntrada:")
+    print(entrada)
 
 
 
     # =========================
-    # CLUSTERIZAÇÃO
+    # KMEANS
     # =========================
 
-    entrada_cluster = entrada[
-        colunas_cluster
-    ]
+    print("\n--- KMEANS ---")
 
 
+    # usa exatamente as colunas do scaler
     entrada_scaled = scaler.transform(
-        entrada_cluster
+        entrada[colunas]
     )
 
 
     entrada_scaled = pd.DataFrame(
         entrada_scaled,
-        columns=colunas_cluster
+        columns=colunas
     )
 
+    # remove regiões antes do KMeans
+    entrada_cluster = entrada_scaled.drop(
+        columns=[
+            'region_northeast',
+            'region_northwest',
+            'region_southeast',
+            'region_southwest'
+        ]
+    )
 
     cluster = kmeans.predict(
-        entrada_scaled
+        entrada_cluster
     )[0]
 
-    print("Entrada para KMeans:")
-    print(entrada_scaled)
-    
-    print("Centro dos clusters:")
-    print(kmeans.cluster_centers_)
-    
-    print("Distâncias:")
-    print(kmeans.transform(entrada_scaled))
+
+    print("Cluster:", cluster)
+
 
 
     # =========================
     # REGRESSÃO
     # =========================
+
+    print("\n--- REGRESSÃO ---")
+
 
     entrada_regressao = entrada[
         colunas
@@ -191,8 +177,9 @@ Região:
 
 
     print(
-        f"📌 Perfil encontrado: Cluster {cluster}"
+        f"📌 Cluster encontrado: {cluster}"
     )
+
 
     print(
         f"💰 Custo estimado: ${custo:,.2f}"
@@ -200,13 +187,13 @@ Região:
 
 
 
-# =========================
-# PROGRAMA PRINCIPAL
-# =========================
 
+
+# =========================
+# LOOP
+# =========================
 
 while True:
-
 
     limpar()
 
@@ -216,69 +203,28 @@ while True:
     print("""
 [1] Fazer previsão
 [0] Sair
-
 """)
 
 
-    opcao = input(
-        "Escolha: "
-    )
+    opcao = input("Escolha: ")
 
 
 
     if opcao == "1":
 
         try:
-
             prever()
-
 
         except Exception as erro:
 
-            print(
-                "\n❌ Erro ao prever:"
-            )
-
+            print("\n❌ Erro:")
             print(erro)
 
 
 
-        continuar = input(
-            "\nDeseja fazer outra previsão? (s/n): "
-        )
-
-
-        if continuar.lower() != "s":
-
-            break
-
+        input("\nENTER para continuar...")
 
 
     elif opcao == "0":
 
         break
-
-
-
-    else:
-
-        print(
-            "\nOpção inválida!"
-        )
-
-        input(
-            "Pressione ENTER..."
-        )
-
-
-
-limpar()
-
-
-print("""
-╔════════════════════════════════════════════╗
-║                                            ║
-║       Obrigado por utilizar o sistema!     ║
-║                                            ║
-╚════════════════════════════════════════════╝
-""")
