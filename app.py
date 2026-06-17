@@ -115,11 +115,15 @@ Região:
 
     print("\n--- KMEANS ---")
 
+    # 1. Criamos uma cópia para não alterar o DataFrame 'entrada' original (usado na regressão)
+    entrada_scaled = entrada.copy()
 
-    # usa exatamente as colunas do scaler
-    entrada_scaled = scaler.transform(
-        entrada[colunas]
-    )
+    # 2. Definimos as colunas que o scaler espera
+    cols_to_scale = ['age', 'bmi', 'children']
+
+    # 3. Escalamos APENAS as colunas numéricas necessárias
+    entrada_scaled[cols_to_scale] = scaler.transform(entrada[cols_to_scale])
+
 
 
     entrada_scaled = pd.DataFrame(
