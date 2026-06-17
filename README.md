@@ -101,56 +101,54 @@ Apesar do maior Silhouette Score ocorrer em K=8, foi escolhido **K=3** devido à
 
 # 📌 Perfil dos Clusters
 
-## Cluster 0 — Alto risco
+## Cluster 0
 
 Características:
 
-* Idade média: 38.51 anos
-* IMC médio: 30.70
-* Filhos médio: 1.11
-* Custo médio: US$ 32.050
-* Total: 274 pessoas
+* Idade média: 52.75 anos
+* IMC médio: 31.53
+* Filhos médio: 0.44
+* Custo médio: US$ 16.166
+* Total: 456 pessoas
 
 Distribuição:
 
-* 274 fumantes
-* 0 não fumantes
-
-Esse grupo representa clientes fumantes com custos elevados.
+* 82 fumantes
+* 374 não fumantes
 
 ---
 
-## Cluster 1 — Baixo custo
+## Cluster 1
 
 Características:
 
-* Idade média: 39.10 anos
-* IMC médio: 30.77
-* Filhos médio: 1.09
-* Custo médio: US$ 8.099
-* Total: 516 pessoas
+* Idade média: 25.57 anos
+* IMC médio: 29.61
+* Filhos médio: 0.43
+* Custo médio: US$ 9.399
+* Total: 485 pessoas
 
 Distribuição:
 
-* 516 não fumantes
-* 0 fumantes
+* 382 não fumantes
+* 103 fumantes
 
 ---
 
-## Cluster 2 — Baixo custo
+## Cluster 2
 
 Características:
 
-* Idade média: 39.69 anos
-* IMC médio: 30.53
-* Filhos médio: 1.08
-* Custo médio: US$ 8.762
-* Total: 547 pessoas
+* Idade média: 40.35 anos
+* IMC médio: 30.95
+* Filhos médio: 2.66
+* Custo médio: US$ 14.706
+* Total: 396 pessoas
 
 Distribuição:
 
-* 547 não fumantes
-* 0 fumantes
+* 307 não fumantes
+* 89 fumantes
 
 ---
 
